@@ -21,5 +21,6 @@ IN WINDOWS you may need to use "py -m" at the beginning
 OR alternatively you can just double click the py file itself that you want to use.
 
 FOR MAC (I don't own or use a Mac but these intructions should be substitable)
-[pdf instructions by ](https://objkt.com/profile/culla/created)
+
+[pdf instructions](https://objkt.com/profile/culla/created)
 
