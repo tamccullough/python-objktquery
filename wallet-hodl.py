@@ -54,7 +54,7 @@ t = 0
 for k in tokens:
     for i in k['token_holders']:
         if i['quantity'] > 0:
-            if i['holder_id'] in ['tz1gE27FWHXzisp1SgkuupZ44g4t8mETafMG','KT1HbQepzV1nVGg8QVznG7z4RcHseD5kwqBn','tz1burnburnburnburnburnburnburjAYjjX','KT1FvqJwEDWb1Gwc55Jd1jjTHRVWbYKUUpyq']:
+            if i['holder_id'] in ['KT1HbQepzV1nVGg8QVznG7z4RcHseD5kwqBn','tz1burnburnburnburnburnburnburjAYjjX','KT1FvqJwEDWb1Gwc55Jd1jjTHRVWbYKUUpyq']:
                 pass
             else:
                 num = i['quantity']
