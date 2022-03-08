@@ -9,7 +9,8 @@ from gql import gql, Client
 from gql.transport.requests import RequestsHTTPTransport
 
 _transport = RequestsHTTPTransport(
-    url='https://api.objkt.com/v1/graphql',
+    # old url='https://api.objkt.com/v1/graphql',
+    url='https://api.objkt.com/v2/graphql',
     use_json=True,
 )
 
@@ -31,17 +32,16 @@ amount = input('enter the minimum number of tokens to own: ')#'1'
 
 query = gql (
     '''
-    query GetFod {
-      token(where: {creator_id: {_eq: "'''+wallet+'''"},
-      title: {_ilike: "'''+value+'''"}}) {
-        id
-        creator_id
-        title
-        token_holders(where: {quantity: {_gte: "'''+amount+'''"}}) {
-          holder_id
+    query MyQuery {
+      token(where: {creators: {creator_address: {_eq: "'''+wallet+'''"}}, name: {_ilike: "%'''+value+'''%"}}) {
+        token_id
+        name
+        holders(where: {quantity: {_gte: "'''+amount+'''"}}) {
+          holder_address
           quantity
         }
-        metadata
+        supply
+        lowest_ask
       }
     }
     '''
@@ -49,20 +49,25 @@ query = gql (
 
 tokens = client.execute(query)['token']
 
-a = []
-t = 0
+a,b,c = [],[],[]
 for k in tokens:
-    for i in k['token_holders']:
+    for i in k['holders']:
         if i['quantity'] > 0:
-            if i['holder_id'] in ['KT1HbQepzV1nVGg8QVznG7z4RcHseD5kwqBn','tz1burnburnburnburnburnburnburjAYjjX','KT1FvqJwEDWb1Gwc55Jd1jjTHRVWbYKUUpyq']:
+            if i['holder_address'] in ['tz1gE27FWHXzisp1SgkuupZ44g4t8mETafMG','tz1XQ7QFCbNZiv6efCyLKhcfyQA4pG54jaoT','KT1HbQepzV1nVGg8QVznG7z4RcHseD5kwqBn','tz1burnburnburnburnburnburnburjAYjjX','KT1FvqJwEDWb1Gwc55Jd1jjTHRVWbYKUUpyq']:
                 pass
             else:
                 num = i['quantity']
                 while num > 0:
-                    a.append(i['holder_id'])
+                    a.append(i['holder_address'])
+                    b.append(k['name'])
                     num-=1
-                    t+=1
+                if k['lowest_ask']:
+                    c.append(k['lowest_ask']/1000000)
+                else:
+                    c.append(0)
 
 df = pd.DataFrame(a,columns=['wallet'])
+df['title'] = b
+df['price'] = c
 print(df)
 df.to_csv('wallets.csv',index=False,header=False)
